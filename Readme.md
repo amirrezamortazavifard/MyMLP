@@ -9,10 +9,10 @@
 ---
 
 ### Dark Theme Showcase
-![Dark Theme UI](./images/DarkTheme.png)
+![Dark Theme UI](./images/DarkTheme.jpg)
 
 ### Light Theme Showcase
-![Light Theme UI](./images/LightTheme.png)
+![Light Theme UI](./images/LightTheme.jpg)
 
 ---
 
@@ -115,4 +115,5 @@ To contribute:
 ## 📄 License
 
 This project is distributed under the MIT License. See `LICENSE` for more information.
+
 
