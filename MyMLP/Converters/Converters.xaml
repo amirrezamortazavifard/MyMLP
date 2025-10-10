@@ -1,0 +1,14 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="clr-namespace:MyMLP.Converters">
+
+    <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    <converters:WeightToThicknessConverter x:Key="WeightToThicknessConverter"/>
+    <converters:WeightToOpacityConverter x:Key="WeightToOpacityConverter"/>
+    <converters:WeightToBrushConverter x:Key="WeightToBrushConverter"/>
+    <converters:CenterElementConverter x:Key="CenterElementConverter"/>
+    <converters:CenterTextConverter x:Key="CenterTextConverter"/>
+
+
+</ResourceDictionary>

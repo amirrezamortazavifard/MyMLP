@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="MyMLP.Views.NetworkArchitectureView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:controls="clr-namespace:MyMLP.Controls"
+             xmlns:viewModels="clr-namespace:MyMLP.ViewModels"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance viewModels:NetworkArchitectureViewModel, IsDesignTimeCreatable=True}"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <controls:ZoomPanControl>
+            <Grid VerticalAlignment="Center">
+                <ItemsControl ItemsSource="{Binding VisualConnections}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Line X1="{Binding X1}" Y1="{Binding Y1}" X2="{Binding X2}" Y2="{Binding Y2}"
+                                  Opacity="{Binding Weight, Converter={StaticResource WeightToOpacityConverter}}">
+                                <Line.Style>
+                                    <Style TargetType="Line">
+                                        <Setter Property="Stroke" Value="{Binding Weight, Converter={StaticResource WeightToBrushConverter}}"/>
+                                        <Setter Property="StrokeThickness" Value="{Binding Weight, Converter={StaticResource WeightToThicknessConverter}}"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsHighlighted}" Value="True">
+                                                <Setter Property="Stroke" Value="White"/>
+                                                <Setter Property="StrokeThickness" Value="4"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Line.Style>
+                            </Line>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <ItemsControl ItemsSource="{Binding VisualLayers}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <Canvas />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Canvas>
+                                <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Canvas.Top="-30" Foreground="{DynamicResource FaintForegroundBrush}">
+                                    <Canvas.Left>
+                                        <MultiBinding Converter="{StaticResource CenterTextConverter}">
+                                            <Binding Path="TitleX"/>
+                                            <Binding RelativeSource="{RelativeSource Self}" Path="ActualWidth"/>
+                                        </MultiBinding>
+                                    </Canvas.Left>
+                                </TextBlock>
+                                <ItemsControl ItemsSource="{Binding Neurons}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <Canvas />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Ellipse x:Name="NeuronEllipse" Width="24" Height="24" Fill="{DynamicResource AccentBrush}" Stroke="{DynamicResource PrimaryForegroundBrush}" StrokeThickness="1"/>
+                                                <TextBlock Text="{Binding Id}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="{DynamicResource AccentForegroundBrush}" FontSize="10" IsHitTestVisible="False"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                    <ItemsControl.ItemContainerStyle>
+                                        <Style TargetType="ContentPresenter">
+                                            <Setter Property="Canvas.Left" Value="{Binding Path=CenterX, Converter={StaticResource CenterElementConverter}, ConverterParameter=24}"/>
+                                            <Setter Property="Canvas.Top" Value="{Binding Path=CenterY, Converter={StaticResource CenterElementConverter}, ConverterParameter=24}"/>
+                                        </Style>
+                                    </ItemsControl.ItemContainerStyle>
+                                </ItemsControl>
+                            </Canvas>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </controls:ZoomPanControl>
+    </Grid>
+</UserControl>

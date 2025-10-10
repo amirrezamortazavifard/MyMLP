@@ -1,0 +1,168 @@
+﻿<Window x:Class="MyMLP.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:MyMLP.ViewModels"
+        xmlns:views="clr-namespace:MyMLP.Views"
+        xmlns:services="clr-namespace:MyMLP.Services"
+        mc:Ignorable="d"
+        Title="MyMLP - Neural Network Playground" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource PrimaryBackgroundBrush}"
+        d:DataContext="{d:DesignInstance viewModels:MainViewModel, IsDesignTimeCreatable=True}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource PrimaryBorderBrush}">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="10">
+                    <StackPanel>
+                        <Grid>
+                            <TextBlock Text="Settings" FontSize="16" FontWeight="Bold" VerticalAlignment="Center"/>
+                            <Button Content="Toggle Theme" Command="{Binding ToggleThemeCommand}" HorizontalAlignment="Right" Padding="8"/>
+                        </Grid>
+
+                        <GroupBox Header="Model Persistence" FontWeight="Bold" Margin="0,15,0,0">
+                            <StackPanel Margin="5" IsEnabled="{Binding IsTrainingRunning, Converter={StaticResource InverseBooleanConverter}}">
+                                <Button Content="Save Model" Command="{Binding SaveModelCommand}" Margin="0,5,0,5"/>
+                                <Button Content="Load Model" Command="{Binding LoadModelCommand}" Margin="0,5,0,5"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <GroupBox Header="Network Configuration" FontWeight="Bold" Margin="0,15,0,0">
+                            <StackPanel Margin="5" IsEnabled="{Binding IsTrainingRunning, Converter={StaticResource InverseBooleanConverter}}">
+                                <TextBlock Text="Activation Function:" Margin="0,0,0,5"/>
+                                <ComboBox ItemsSource="{Binding AvailableActivationFunctions}"
+                                          SelectedItem="{Binding SelectedActivationFunction}"
+                                          DisplayMemberPath="Key"/>
+
+                                <TextBlock Text="Input Neurons:" Margin="0,10,0,0"/>
+                                <TextBox Text="{Binding InputSize, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Text="Hidden Layers:" Margin="0,10,0,0"/>
+                                <TextBox Text="{Binding HiddenLayersDefinition, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Text="Output Neurons:" Margin="0,10,0,0"/>
+                                <TextBox Text="{Binding OutputSize, UpdateSourceTrigger=PropertyChanged}"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <GroupBox Header="Data Loading" FontWeight="Bold" Margin="0,15,0,0">
+                            <StackPanel Margin="5" IsEnabled="{Binding IsTrainingRunning, Converter={StaticResource InverseBooleanConverter}}">
+                                <Button Content="Load CSV Data File" Command="{Binding LoadDataCommand}"/>
+                                <TextBlock Text="{Binding SelectedFilePath, FallbackValue='No file selected'}" TextTrimming="CharacterEllipsis" ToolTip="{Binding SelectedFilePath}" Margin="0,5,0,0" Opacity="0.7"/>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <GroupBox Header="Built-in Datasets" FontWeight="Bold" Margin="0,15,0,0">
+                            <StackPanel Margin="5" IsEnabled="{Binding IsTrainingRunning, Converter={StaticResource InverseBooleanConverter}}">
+                                <TextBlock>
+                                    <Run Text="Number of samples:"/>
+                                    <Run Text="{Binding DataSampleCount, Mode=OneWay}"/>
+                                </TextBlock>
+                                <Slider Value="{Binding DataSampleCount}" Minimum="50" Maximum="1000" TickFrequency="50" IsSnapToTickEnabled="True"/>
+
+                                <TextBlock Margin="0,10,0,0">
+                                    <Run Text="Noise level:"/>
+                                    <Run Text="{Binding DataNoiseLevel, Mode=OneWay, StringFormat=P0}"/>
+                                </TextBlock>
+                                <Slider Value="{Binding DataNoiseLevel}" Minimum="0" Maximum="1" TickFrequency="0.1" IsSnapToTickEnabled="True"/>
+
+                                <Grid Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    <Button Grid.Row="0" Grid.Column="0" Content="Circle" Command="{Binding GenerateDataCommand}" CommandParameter="{x:Static services:DatasetType.Circle}" Margin="2"/>
+                                    <Button Grid.Row="0" Grid.Column="1" Content="XOR" Command="{Binding GenerateDataCommand}" CommandParameter="{x:Static services:DatasetType.XOR}" Margin="2"/>
+                                    <Button Grid.Row="0" Grid.Column="2" Content="Spiral" Command="{Binding GenerateDataCommand}" CommandParameter="{x:Static services:DatasetType.Spiral}" Margin="2"/>
+                                    <Button Grid.Row="0" Grid.Column="3" Content="Moons" Command="{Binding GenerateDataCommand}" CommandParameter="{x:Static services:DatasetType.TwoMoons}" Margin="2"/>
+
+                                    <Button Grid.Row="1" Grid.Column="0" Content="Gaussian" Command="{Binding GenerateDataCommand}" CommandParameter="{x:Static services:DatasetType.Gaussian}" Margin="2"/>
+                                    <Button Grid.Row="1" Grid.Column="1" Content="Corners" Command="{Binding GenerateDataCommand}" CommandParameter="{x:Static services:DatasetType.FourCorners}" Margin="2"/>
+                                    <Button Grid.Row="1" Grid.Column="2" Content="Ring" Command="{Binding GenerateDataCommand}" CommandParameter="{x:Static services:DatasetType.CenterRing}" Margin="2"/>
+                                    <Button Grid.Row="1" Grid.Column="3" Content="Sine" Command="{Binding GenerateDataCommand}" CommandParameter="{x:Static services:DatasetType.SineWave}" Margin="2"/>
+                                </Grid>
+                            </StackPanel>
+                        </GroupBox>
+
+                        <GroupBox Header="Training Configuration" FontWeight="Bold" Margin="0,15,0,0">
+                            <StackPanel Margin="5">
+                                <TextBlock Text="Learning Rate:"/>
+                                <TextBox Text="{Binding LearningRate, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTrainingRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+                                <TextBlock Text="Epochs (Max):" Margin="0,10,0,0"/>
+                                <TextBox Text="{Binding Epochs, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsTrainingRunning, Converter={StaticResource InverseBooleanConverter}}"/>
+
+                                <CheckBox Content="Live Update Data View" IsChecked="{Binding IsLiveUpdateEnabled}" Margin="0,15,0,5"/>
+
+                                <TextBlock Margin="0,5,0,5">
+                                    <Run Text="Visualization Speed (Epochs per Update:"/>
+                                    <Run Text="{Binding EpochsPerUpdate, Mode=OneWay}"/>
+                                    <Run Text=")"/>
+                                </TextBlock>
+                                <Slider Value="{Binding EpochsPerUpdate}" Minimum="1" Maximum="500" TickFrequency="1" IsSnapToTickEnabled="True"/>
+
+                                <Grid Margin="0,15,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Button Grid.Column="0" Content="▶ Play" Command="{Binding PlayCommand}" Margin="2" FontWeight="Bold"/>
+                                    <Button Grid.Column="1" Content="❚❚ Pause" Command="{Binding PauseCommand}" Margin="2" FontWeight="Bold"/>
+                                    <Button Grid.Column="2" Content="■ Reset" Command="{Binding ResetCommand}" Margin="2" FontWeight="Bold"/>
+                                </Grid>
+                            </StackPanel>
+                        </GroupBox>
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Row="0" Grid.Column="0" BorderThickness="0,0,1,1" BorderBrush="{DynamicResource PrimaryBorderBrush}" Margin="5">
+                    <views:DataView DataContext="{Binding DataVM}"/>
+                </Border>
+                <Border Grid.Row="0" Grid.Column="1" BorderThickness="0,0,0,1" BorderBrush="{DynamicResource PrimaryBorderBrush}" Margin="5">
+                    <views:PerformanceDashboardView DataContext="{Binding DashboardVM}"/>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="0" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource PrimaryBorderBrush}" Margin="5">
+                    <views:NetworkArchitectureView DataContext="{Binding ArchitectureVM}"/>
+                </Border>
+                <Border Grid.Row="1" Grid.Column="1" BorderThickness="0,0,0,0" BorderBrush="{DynamicResource PrimaryBorderBrush}" Margin="5">
+                    <views:TrainingLogView DataContext="{Binding LogVM}"/>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <StatusBar Grid.Row="1" Grid.ColumnSpan="2">
+            <DockPanel HorizontalAlignment="Stretch" Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type StatusBar}}}">
+                <ProgressBar DockPanel.Dock="Right" Width="200" Margin="5,0" Value="{Binding EpochProgressValue}" />
+                <Separator DockPanel.Dock="Right"/>
+                <TextBlock Text="{Binding StatusText}" Margin="5,0"/>
+            </DockPanel>
+        </StatusBar>
+    </Grid>
+</Window> 
