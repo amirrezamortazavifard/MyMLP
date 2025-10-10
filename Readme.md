@@ -9,10 +9,10 @@
 ---
 
 ### Dark Theme Showcase
-![Dark Theme UI](https://github.com/amirrezamortazavifard/MyMLP/blob/main/images/DarkTheme.png)
+![Dark Theme UI](./images/DarkTheme.png)
 
 ### Light Theme Showcase
-![Light Theme UI](https://github.com/amirrezamortazavifard/MyMLP/blob/main/images/LightTheme.png)
+![Light Theme UI](./images/LightTheme.png)
 
 ---
 
@@ -115,3 +115,4 @@ To contribute:
 ## 📄 License
 
 This project is distributed under the MIT License. See `LICENSE` for more information.
+
