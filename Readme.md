@@ -6,6 +6,10 @@
 
 **MyMLP** is a powerful and interactive desktop application for visualizing and training Multi-Layer Perceptron (MLP) neural networks. Built with **.NET 8** and **WPF**, this tool provides an immersive, hands-on environment for students, developers, and researchers to explore the fundamentals of neural networks, understand their architecture, and observe the fascinating process of machine learning in real-time.
 
+<p align="center">
+  <img src="./images/banner.jpg" alt="MyMLP Official Banner" width="100%" />
+</p>
+
 ---
 
 ### Dark Theme Showcase
